@@ -11,12 +11,26 @@ except ImportError:
     from BaseAPI import BaseAPI
 
 class douyin_cache():
+    def random_user_agent():
+        chrome_version = random.randint(100, 120)
+        return f'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome_version}.0.0.0 Safari/537.36'
     base_headers = {
         'authority': 'live.douyin.com',
         'Referer': "https://live.douyin.com/",
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.81 Safari/537.36 Edg/104.0.1293.54',
+        'user-agent': random_user_agent(),
     }
     cookies = {}
+
+    @classmethod
+    def parse_cookies(cls, cookie_str):
+        cookies_dict = {}
+        for cookie in cookie_str.split('; '):
+            key, value = cookie.split('=', 1)
+            cookies_dict[key] = value
+        if "ttwid" not in cookies_dict:
+            cls.refresh_cookies()
+            cookies_dict['ttwid'] = cls.cookies['ttwid']
+        return cookies_dict
 
     @classmethod
     def refresh_cookies(cls):
@@ -42,9 +56,13 @@ class douyin_cache():
         return cls.cookies
 
     @classmethod
-    def get_headers(cls) -> dict:
+    def get_headers(cls, cookies_str=None) -> dict:
         headers = cls.base_headers.copy()
-        headers['cookie'] = '; '.join(f'{k}={v}' for k,v in cls.get_cookies().items())
+        if not cookies_str:
+            cookies = cls.get_cookies()
+        else:
+            cookies = cls.parse_cookies(cookies_str)
+        headers['cookie'] = '; '.join(f'{k}={v}' for k, v in cookies.items())
         return headers
 
 

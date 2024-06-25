@@ -113,6 +113,8 @@ download_args:
       # 用户名称过滤，只有用户名称完全与发弹幕的用户名相同才会过滤
       # 此功能暂不生效
       username: ~
+    # 抖音cookies，自动获取cookies不可用时可以填写，格式参考：cookies: '__ac_nonce=xxx; __ac_signature=xxx; sessionid=xxx'
+    cookies: ''
     # 高级弹幕录制参数
     # 请注意此参数随时可能删减，正常情况下不应该修改
     advanced_dm_args:

@@ -52,12 +52,12 @@ class Douyin:
     heartbeatInterval = 10
 
     @staticmethod
-    async def get_ws_info(url, **kwargs):
+    async def get_ws_info(url, cookies, **kwargs):
         async with aiohttp.ClientSession() as session:
             _, room_id = split_url(url)
             async with session.get(
                     build_request_url(f"https://live.douyin.com/webcast/room/web/enter/?web_rid={room_id}"),
-                    headers=douyin_cache.get_headers(), timeout=5) as resp:
+                    headers=douyin_cache.get_headers(cookies), timeout=5) as resp:
                 room_info = json.loads(await resp.text())['data']['data'][0]
                 USER_UNIQUE_ID = DouyinDanmakuUtils.get_user_unique_id()
                 VERSION_CODE = 180800 # https://lf-cdn-tos.bytescm.com/obj/static/webcast/douyin_live/7697.782665f8.js -> a.ry

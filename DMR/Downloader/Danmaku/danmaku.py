@@ -19,6 +19,7 @@ class DanmakuDownloader():
                  output:str,
                  segment:float,
                  dm_format:str,
+                 cookies: str=None,
                  dm_filter:dict=None,
                  dm_stream_option:dict={},
                  advanced_dm_args:dict={},
@@ -30,6 +31,7 @@ class DanmakuDownloader():
         self.output = output
         self.segment = segment
         self.dm_format = dm_format
+        self.cookies = cookies
         self.dm_stream_option = dm_stream_option
         self.advanced_dm_args = advanced_dm_args
         self.dm_delay_fixed = self.advanced_dm_args.get('dm_delay_fixed', 6)
@@ -113,7 +115,7 @@ class DanmakuDownloader():
             q = asyncio.Queue()
 
             async def dmc_task():
-                dmc = DanmakuClient(url, q, **self.dm_stream_option)
+                dmc = DanmakuClient(url, q, self.cookies, **self.dm_stream_option)
                 try:
                     await dmc.start()
                 except asyncio.CancelledError:
