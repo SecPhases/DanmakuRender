@@ -4,6 +4,7 @@ import re, asyncio, aiohttp
 
 # from .youtube import Youtube
 from DMR.utils import *
+from ..douyin import douyin_cache
 
 __all__ = ["DanmakuClient"]
 
@@ -65,7 +66,7 @@ class DanmakuClient:
 
     async def init_ws(self):
         ws_url, reg_datas = await self.__site_api.get_ws_info(self.__url, self.__cookies, **self.__kwargs)
-        self.__ws = await self.__hs.ws_connect(ws_url, headers=getattr(self.__site_api, 'headers', {}))
+        self.__ws = await self.__hs.ws_connect(ws_url, headers=douyin_cache.get_headers(self.__cookies))
         for reg_data in reg_datas:
             if type(reg_data) == str:
                 await self.__ws.send_str(reg_data)
